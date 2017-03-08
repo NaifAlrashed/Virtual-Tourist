@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class Client {
-    func getPhotos(lat: Double, lon: Double, completionHandler: @escaping (_ image: UIImage) -> Void) -> [Data]? {
+    func getPhotos(lat: Double, lon: Double, completionHandler: @escaping (_ image: UIImage, _ count: Int) -> Void) -> [Data]? {
         print(#function)
         let parameters: [String:String] = [
             Constants.FlickrParameterKeys.Method: Constants.FlickrParameterValues.searchMethod,
@@ -18,7 +18,8 @@ class Client {
             Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
             Constants.FlickrParameterKeys.latitude: "\(lat)",
             Constants.FlickrParameterKeys.longitude: "\(lon)",
-            Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback
+            Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
+            Constants.FlickrParameterKeys.NumberOfResultsPerPage: Constants.FlickrParameterValues.NumberOfResultsPerPage
         ]
         
         let request = URLRequest(url: URL(string: "\(Constants.Flickr.APIBaseURL)\(escapedParameters(parameters))")!)
@@ -53,6 +54,7 @@ class Client {
                 return
             }
             print(photos.count)
+            var count = photos.count
             for somePhoto in photos {
                 guard let photoReference = somePhoto as? [String:Any] else {
                     print("couldn't convert array to dictionary")
@@ -92,6 +94,12 @@ class Client {
                 
                 let image = UIImage(data: imageData)
                 print(photoUrl)
+                if let image = image {
+                    completionHandler(image, count)
+                } else {
+                    print("image is nil!!!!!!!!!!!! \(photoUrl)")
+                }
+                count = count - 1
             }
         }
         

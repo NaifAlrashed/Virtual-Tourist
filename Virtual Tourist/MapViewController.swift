@@ -35,6 +35,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let controller = storyboard?.instantiateViewController(withIdentifier: "Pictures") as! PicturesCollectionViewController
         controller.lat = view.annotation?.coordinate.latitude
         controller.lon = view.annotation?.coordinate.longitude
+        controller.coordinate = view.annotation?.coordinate
         navigationController?.pushViewController(controller, animated: true)
     }
 

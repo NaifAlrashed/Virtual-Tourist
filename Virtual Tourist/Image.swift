@@ -8,6 +8,6 @@
 
 import UIKit
 
-class Image: UICollectionViewCell {
-    let image: UIImageView? = nil    
+class Image: UICollectionViewCell {    
+    @IBOutlet weak var imageView: UIImageView!
 }

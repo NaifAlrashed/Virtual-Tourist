@@ -25,6 +25,7 @@ import Foundation
             static let longitude = "lon"
             static let Format = "format"
             static let NoJSONCallback = "nojsoncallback"
+            static let NumberOfResultsPerPage = "per_page"
         }
         
         // MARK: Flickr Parameter Values
@@ -35,6 +36,7 @@ import Foundation
             static var latitude = ""
             static var longitude = ""
             static let searchMethod = "flickr.photos.search"
+            static let NumberOfResultsPerPage = "21"
         }
         
         // MARK: Flickr Response Keys
