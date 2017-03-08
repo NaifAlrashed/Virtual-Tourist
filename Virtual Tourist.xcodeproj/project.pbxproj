@@ -17,6 +17,8 @@
 		9E8B42231E6EBD6000E9AAC2 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E8B42221E6EBD6000E9AAC2 /* MapKit.framework */; };
 		9E8B42251E6F051200E9AAC2 /* PinAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8B42241E6F051200E9AAC2 /* PinAnnotation.swift */; };
 		9E8B42271E6FE10400E9AAC2 /* PicturesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8B42261E6FE10400E9AAC2 /* PicturesCollectionViewController.swift */; };
+		9E8B42291E700CC300E9AAC2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8B42281E700CC300E9AAC2 /* Constants.swift */; };
+		9E8B422B1E70172C00E9AAC2 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8B422A1E70172C00E9AAC2 /* Client.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		9E8B42221E6EBD6000E9AAC2 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		9E8B42241E6F051200E9AAC2 /* PinAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinAnnotation.swift; sourceTree = "<group>"; };
 		9E8B42261E6FE10400E9AAC2 /* PicturesCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PicturesCollectionViewController.swift; sourceTree = "<group>"; };
+		9E8B42281E700CC300E9AAC2 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		9E8B422A1E70172C00E9AAC2 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,8 @@
 			children = (
 				9E8B42061E6D965F00E9AAC2 /* Virtual_Tourist.xcdatamodeld */,
 				9E8B42241E6F051200E9AAC2 /* PinAnnotation.swift */,
+				9E8B42281E700CC300E9AAC2 /* Constants.swift */,
+				9E8B422A1E70172C00E9AAC2 /* Client.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -193,7 +199,9 @@
 				9E8B42021E6D965F00E9AAC2 /* MapViewController.swift in Sources */,
 				9E8B42151E6D997C00E9AAC2 /* Image.swift in Sources */,
 				9E8B42081E6D965F00E9AAC2 /* Virtual_Tourist.xcdatamodeld in Sources */,
+				9E8B42291E700CC300E9AAC2 /* Constants.swift in Sources */,
 				9E8B42001E6D965F00E9AAC2 /* AppDelegate.swift in Sources */,
+				9E8B422B1E70172C00E9AAC2 /* Client.swift in Sources */,
 				9E8B42271E6FE10400E9AAC2 /* PicturesCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

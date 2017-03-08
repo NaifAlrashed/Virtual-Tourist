@@ -10,6 +10,26 @@ import UIKit
 
 class PicturesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
+    var lat: Double? = nil
+    var lon: Double? = nil
+    
+    var images: [UIImage] = [UIImage]()
+    
+    private let client = Client()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if let lat = lat,
+            let lon = lon {
+            
+            let _ = client.getPhotos(lat: lat, lon: lon, completionHandler: { image in
+                DispatchQueue.main.async {
+                    self.images.append(image)
+                }
+            })
+        }
+    }
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         return UICollectionViewCell()
     }
@@ -20,11 +40,8 @@ class PicturesCollectionViewController: UIViewController, UICollectionViewDelega
         return 0
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
