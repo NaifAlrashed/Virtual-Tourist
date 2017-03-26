@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import UIKit
 
     struct Constants {
         
@@ -30,7 +30,7 @@ import Foundation
         
         // MARK: Flickr Parameter Values
         struct FlickrParameterValues {
-            static let APIKey = "519bef96f3f1304e71258378481aea09"
+            static let APIKey = "6c9e1421510633e2a5e6a747aefd0cf3"
             static let ResponseFormat = "json"
             static let DisableJSONCallback = "1" /* 1 means "yes" */
             static var latitude = ""

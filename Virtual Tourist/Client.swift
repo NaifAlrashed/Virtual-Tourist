@@ -10,6 +10,11 @@ import Foundation
 import UIKit
 
 class Client {
+    
+    static let shared = Client()
+    
+    private init () {}
+    
     func getPhotos(lat: Double, lon: Double, completionHandler: @escaping (_ image: UIImage, _ count: Int) -> Void) -> [Data]? {
         print(#function)
         let parameters: [String:String] = [
@@ -101,8 +106,7 @@ class Client {
                 }
                 count = count - 1
             }
-        }
-        
+        }        
         task.resume()
         
         return nil
@@ -125,12 +129,8 @@ class Client {
                 
                 // append it
                 keyValuePairs.append(key + "=" + "\(escapedValue!)")
-                
             }
-            
             return "?\(keyValuePairs.joined(separator: "&"))"
         }
     }
-    
-    
 }

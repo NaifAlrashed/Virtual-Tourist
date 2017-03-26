@@ -2,8 +2,9 @@
 //  Pin+CoreDataProperties.swift
 //  Virtual Tourist
 //
-//  Created by Naif Alrashed on 3/7/17.
+//  Created by Naif Alrashed on 3/21/17.
 //  Copyright © 2017 Naif Alrashed. All rights reserved.
+//  This file was automatically generated and should not be edited.
 //
 
 import Foundation

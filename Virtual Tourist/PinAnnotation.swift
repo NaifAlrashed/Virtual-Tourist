@@ -15,5 +15,8 @@ class PinAnnotation: NSObject, MKAnnotation {
     init(coordinate: CLLocationCoordinate2D) {
         self.coordinate = coordinate
     }
-    
+    convenience init(pin: Pin) {
+        let location = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
+        self.init(coordinate: location)
+    }
 }

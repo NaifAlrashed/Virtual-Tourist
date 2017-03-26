@@ -8,12 +8,23 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
+    
+    let delegate = UIApplication.shared.delegate as! AppDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let fr: NSFetchRequest<Pin> = Pin.fetchRequest()
+        if let pins = try? delegate.persistentContainer.viewContext.fetch(fr) {
+            for pin in pins {
+                let annotation = PinAnnotation(pin: pin)
+                mapView.addAnnotation(annotation)
+            }
+        }
     }
     
     @IBAction func addPin(_ sender: UILongPressGestureRecognizer) {
@@ -28,6 +39,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         let pin = PinAnnotation(coordinate: locationCoordinate)
         mapView.addAnnotation(pin)
+        
+        let aPin: Pin = NSEntityDescription.insertNewObject(forEntityName: "Pin", into: delegate.persistentContainer.viewContext) as! Pin
+        aPin.latitude = locationCoordinate.latitude
+        aPin.longitude = locationCoordinate.longitude
+        
+        
+        delegate.saveContext()
     }
     
     
@@ -35,6 +53,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let controller = storyboard?.instantiateViewController(withIdentifier: "Pictures") as! PicturesCollectionViewController
         controller.lat = view.annotation?.coordinate.latitude
         controller.lon = view.annotation?.coordinate.longitude
+//        controller.pin = pin 
         controller.coordinate = view.annotation?.coordinate
         navigationController?.pushViewController(controller, animated: true)
     }

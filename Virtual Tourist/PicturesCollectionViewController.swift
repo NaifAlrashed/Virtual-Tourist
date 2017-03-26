@@ -8,58 +8,80 @@
 
 import UIKit
 import MapKit
-class PicturesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+import CoreData
+
+class PicturesCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
     
     var lat: Double? = nil
     var lon: Double? = nil
+    var locationPin: Pin? = nil
     
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var coordinate: CLLocationCoordinate2D? = nil
     
+    var fetchResult : NSFetchedResultsController<NSFetchRequestResult>!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var mapView: MKMapView!
     
     var images: [UIImage] = [UIImage]()
     
-    private let client = Client()
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+//    private let client = Client()
+    private let imageCache = ImageCache.shared
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         
         let pin = PinAnnotation(coordinate: coordinate!)
         mapView.addAnnotation(pin)
         mapView.selectAnnotation(pin, animated: true)
-        
-        if let lat = lat,
-            let lon = lon {
+
+        imageCache.getImages(lat: (coordinate?.latitude)!, lon: (coordinate?.longitude)!, collectionView: collectionView) { image in
             
-            
-            let _ = client.getPhotos(lat: lat, lon: lon, completionHandler: { image, count in
-                DispatchQueue.main.async {
-                    print("inside controller")
-                    self.images.append(image)
-                    if count == 1 {
-                        print("count == 1!, length of images = \(self.images.count)")
-                        self.collectionView.reloadData()
-                    }
-                }
-            })
+            self.images.append(image)
         }
+
     }
+    
+    
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! Image
-        
+        guard indexPath.row < images.count else {
+            cell.imageView.image = #imageLiteral(resourceName: "placeHolder")
+            cell.loading.startAnimating()
+            cell.loading.isHidden = false
+            return cell
+        }
         cell.imageView?.image = images[indexPath.row]
-        
+        cell.loading.stopAnimating()
+        cell.loading.isHidden = true
         return cell
     }
 
     
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedImageData = images[indexPath.row] as! NSData
+        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+        let predicate = NSPredicate(format: "path = %@", argumentArray: [selectedImageData])
+        
+    }
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return images.count
+        return (images.count == 0) ? 21: images.count
     }
 
-
+    
+    @IBAction func refresh(_ sender: Any) {
+        imageCache.getImagesFromNetwork(lat: coordinate!.latitude, lon: coordinate!.longitude, collectionView: collectionView, locationPin: imageCache.getPin(lat: coordinate!.latitude, lon: coordinate!.longitude)) { image in
+            
+            self.images.append(image)
+        }
+    }
 }
