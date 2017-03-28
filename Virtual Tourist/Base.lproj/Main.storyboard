@@ -55,10 +55,10 @@
             </objects>
             <point key="canvasLocation" x="1120.8" y="-544.67766116941539"/>
         </scene>
-        <!--Pictures Collection View Controller-->
+        <!--Photo Album View Controller-->
         <scene sceneID="0wj-qh-Q1D">
             <objects>
-                <viewController storyboardIdentifier="Pictures" id="oNy-zp-4yU" customClass="PicturesCollectionViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Pictures" id="oNy-zp-4yU" customClass="PhotoAlbumViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="JgI-ls-WZm"/>
                         <viewControllerLayoutGuide type="bottom" id="Fjj-mE-3nw"/>
@@ -93,7 +93,7 @@
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qfa-Rv-UPy">
                                                             <rect key="frame" x="0.0" y="0.0" width="116" height="126"/>
                                                         </imageView>
-                                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="tp8-W3-tCU">
+                                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="tp8-W3-tCU">
                                                             <rect key="frame" x="48" y="53" width="20" height="20"/>
                                                         </activityIndicatorView>
                                                     </subviews>

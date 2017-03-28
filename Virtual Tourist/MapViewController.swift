@@ -50,7 +50,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        let controller = storyboard?.instantiateViewController(withIdentifier: "Pictures") as! PicturesCollectionViewController
+        let controller = storyboard?.instantiateViewController(withIdentifier: "Pictures") as! PhotoAlbumViewController
         controller.lat = view.annotation?.coordinate.latitude
         controller.lon = view.annotation?.coordinate.longitude
 //        controller.pin = pin 
