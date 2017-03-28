@@ -2,9 +2,8 @@
 //  Photo+CoreDataProperties.swift
 //  Virtual Tourist
 //
-//  Created by Naif Alrashed on 3/21/17.
+//  Created by Naif Alrashed on 3/27/17.
 //  Copyright © 2017 Naif Alrashed. All rights reserved.
-//  This file was automatically generated and should not be edited.
 //
 
 import Foundation
@@ -19,5 +18,4 @@ extension Photo {
 
     @NSManaged public var path: NSData?
     @NSManaged public var pin: Pin?
-
 }

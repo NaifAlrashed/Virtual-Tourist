@@ -45,7 +45,6 @@ class PicturesCollectionViewController: UIViewController, UICollectionViewDelega
             
             self.images.append(image)
         }
-
     }
     
     
@@ -79,9 +78,23 @@ class PicturesCollectionViewController: UIViewController, UICollectionViewDelega
 
     
     @IBAction func refresh(_ sender: Any) {
-        imageCache.getImagesFromNetwork(lat: coordinate!.latitude, lon: coordinate!.longitude, collectionView: collectionView, locationPin: imageCache.getPin(lat: coordinate!.latitude, lon: coordinate!.longitude)) { image in
+        let pin = imageCache.getPin(lat: coordinate!.latitude, lon: coordinate!.longitude)
+        updatePageNumberAndClearPhotos(of: pin)
+        clearAndReloadCollectionView()
+        print("now pageNumber = \(pin.pageNumber)")
+        appDelegate.saveContext()
+        imageCache.getImagesFromNetwork(lat: coordinate!.latitude, lon: coordinate!.longitude, collectionView: collectionView, locationPin: pin) { image in
             
             self.images.append(image)
         }
+    }
+    
+    private func updatePageNumberAndClearPhotos(of pin: Pin) {
+        pin.pageNumber += 1
+        pin.photos = NSSet()
+    }
+    private func clearAndReloadCollectionView() {
+        images = []
+        collectionView.reloadData()
     }
 }

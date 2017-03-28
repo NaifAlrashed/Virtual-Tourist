@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E13B03D1E891B1E00E490B7 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E13B03B1E891B1E00E490B7 /* Photo+CoreDataProperties.swift */; };
+		9E13B03E1E891B1E00E490B7 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E13B03C1E891B1E00E490B7 /* Pin+CoreDataProperties.swift */; };
+		9E13B0401E891C6C00E490B7 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E13B03F1E891C6C00E490B7 /* Pin.swift */; };
+		9E13B0421E891C8100E490B7 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E13B0411E891C8100E490B7 /* Photo.swift */; };
 		9E6B329B1E85844E00F6C737 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6B329A1E85844E00F6C737 /* ImageCache.swift */; };
 		9E8B42001E6D965F00E9AAC2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8B41FF1E6D965F00E9AAC2 /* AppDelegate.swift */; };
 		9E8B42021E6D965F00E9AAC2 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8B42011E6D965F00E9AAC2 /* MapViewController.swift */; };
@@ -23,6 +27,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9E13B03B1E891B1E00E490B7 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		9E13B03C1E891B1E00E490B7 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		9E13B03F1E891C6C00E490B7 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
+		9E13B0411E891C8100E490B7 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		9E6B329A1E85844E00F6C737 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		9E8B41FC1E6D965F00E9AAC2 /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E8B41FF1E6D965F00E9AAC2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -52,6 +60,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9E13B0431E891CC400E490B7 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				9E13B03B1E891B1E00E490B7 /* Photo+CoreDataProperties.swift */,
+				9E13B03F1E891C6C00E490B7 /* Pin.swift */,
+				9E13B0411E891C8100E490B7 /* Photo.swift */,
+				9E13B03C1E891B1E00E490B7 /* Pin+CoreDataProperties.swift */,
+				9E8B42061E6D965F00E9AAC2 /* Virtual_Tourist.xcdatamodeld */,
+			);
+			name = CoreData;
+			sourceTree = "<group>";
+		};
+		9E13B0441E8A53BF00E490B7 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				9E8B42281E700CC300E9AAC2 /* Constants.swift */,
+				9E8B422A1E70172C00E9AAC2 /* Client.swift */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
 		9E8B41F31E6D965F00E9AAC2 = {
 			isa = PBXGroup;
 			children = (
@@ -104,11 +133,10 @@
 		9E8B42181E6D999400E9AAC2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9E13B0441E8A53BF00E490B7 /* Network */,
+				9E13B0431E891CC400E490B7 /* CoreData */,
 				9E6B329A1E85844E00F6C737 /* ImageCache.swift */,
-				9E8B42061E6D965F00E9AAC2 /* Virtual_Tourist.xcdatamodeld */,
 				9E8B42241E6F051200E9AAC2 /* PinAnnotation.swift */,
-				9E8B42281E700CC300E9AAC2 /* Constants.swift */,
-				9E8B422A1E70172C00E9AAC2 /* Client.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -201,11 +229,15 @@
 				9E8B42251E6F051200E9AAC2 /* PinAnnotation.swift in Sources */,
 				9E8B42021E6D965F00E9AAC2 /* MapViewController.swift in Sources */,
 				9E8B42151E6D997C00E9AAC2 /* Image.swift in Sources */,
+				9E13B0401E891C6C00E490B7 /* Pin.swift in Sources */,
+				9E13B03E1E891B1E00E490B7 /* Pin+CoreDataProperties.swift in Sources */,
 				9E8B42081E6D965F00E9AAC2 /* Virtual_Tourist.xcdatamodeld in Sources */,
+				9E13B0421E891C8100E490B7 /* Photo.swift in Sources */,
 				9E8B42291E700CC300E9AAC2 /* Constants.swift in Sources */,
 				9E8B42001E6D965F00E9AAC2 /* AppDelegate.swift in Sources */,
 				9E8B422B1E70172C00E9AAC2 /* Client.swift in Sources */,
 				9E6B329B1E85844E00F6C737 /* ImageCache.swift in Sources */,
+				9E13B03D1E891B1E00E490B7 /* Photo+CoreDataProperties.swift in Sources */,
 				9E8B42271E6FE10400E9AAC2 /* PicturesCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

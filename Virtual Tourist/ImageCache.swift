@@ -19,11 +19,15 @@ class ImageCache {
     
     func getImagesFromNetwork (lat: Double, lon: Double, collectionView: UICollectionView, locationPin: Pin, completion: @escaping(_ image: UIImage) -> Void) {
         
+        Constants.FlickrParameterValues.pageNumber = String(locationPin.pageNumber)
         let _ = client.getPhotos(lat: lat, lon: lon, completionHandler: { image, count in
+            if count < 21 {
+                locationPin.pageNumber = 0
+            }
             DispatchQueue.main.async {
                 print("inside controller")
                 completion(image)
-                let photo = NSEntityDescription.insertNewObject(forEntityName: "Photo", into: self.appDelegate.persistentContainer.viewContext) as! Photo
+                let photo = Photo(context: self.appDelegate.persistentContainer.viewContext)
                 let data = UIImagePNGRepresentation(image)
                 photo.path = data! as NSData?
                 locationPin.addToPhotos(photo)
@@ -50,11 +54,9 @@ class ImageCache {
             //get images from webservice
             getImagesFromNetwork(lat: lat, lon: lon, collectionView: collectionView, locationPin: pin, completion: completion)
         } else {
-            
             print("using core data")
             for photo in photos! {
-                let somePhoto = photo as! Photo
-                let image = UIImage(data: somePhoto.path as! Data)!
+                let image = UIImage(data: photo.path as! Data)!
                 completion(image)
             }
         }

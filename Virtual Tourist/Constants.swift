@@ -26,6 +26,7 @@ import UIKit
             static let Format = "format"
             static let NoJSONCallback = "nojsoncallback"
             static let NumberOfResultsPerPage = "per_page"
+            static let pageNumber = "page"
         }
         
         // MARK: Flickr Parameter Values
@@ -37,6 +38,7 @@ import UIKit
             static var longitude = ""
             static let searchMethod = "flickr.photos.search"
             static let NumberOfResultsPerPage = "21"
+            static var pageNumber = "1"
         }
         
         // MARK: Flickr Response Keys

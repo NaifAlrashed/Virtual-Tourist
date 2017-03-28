@@ -40,7 +40,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let pin = PinAnnotation(coordinate: locationCoordinate)
         mapView.addAnnotation(pin)
         
-        let aPin: Pin = NSEntityDescription.insertNewObject(forEntityName: "Pin", into: delegate.persistentContainer.viewContext) as! Pin
+        let aPin = Pin(context: delegate.persistentContainer.viewContext)
         aPin.latitude = locationCoordinate.latitude
         aPin.longitude = locationCoordinate.longitude
         

@@ -24,7 +24,8 @@ class Client {
             Constants.FlickrParameterKeys.latitude: "\(lat)",
             Constants.FlickrParameterKeys.longitude: "\(lon)",
             Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback,
-            Constants.FlickrParameterKeys.NumberOfResultsPerPage: Constants.FlickrParameterValues.NumberOfResultsPerPage
+            Constants.FlickrParameterKeys.NumberOfResultsPerPage: Constants.FlickrParameterValues.NumberOfResultsPerPage,
+            Constants.FlickrParameterKeys.pageNumber: Constants.FlickrParameterValues.pageNumber
         ]
         
         let request = URLRequest(url: URL(string: "\(Constants.Flickr.APIBaseURL)\(escapedParameters(parameters))")!)
