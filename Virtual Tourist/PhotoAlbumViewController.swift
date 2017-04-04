@@ -12,20 +12,27 @@ import CoreData
 
 class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
     
+    var insertedIndexPaths: [IndexPath]? = nil
+    var deletedIndexPaths: [IndexPath]? = nil
+    
     var lat: Double? = nil
     var lon: Double? = nil
     var locationPin: Pin? = nil
-    var dbImageData: [NSData] = []
+//    var dbImageData: [NSData] = []
+    
+    var fetchedResultsController: NSFetchedResultsController<Photo>? {
+        didSet {
+            fetchedResultsController?.delegate = self
+        }
+    }
+    
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var coordinate: CLLocationCoordinate2D? = nil
-    
+    var a = true
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var mapView: MKMapView!
     
-    var images: [UIImage] = [UIImage]()
-    
-    private let imageCache = ImageCache.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,24 +44,31 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         mapView.selectAnnotation(pin, animated: true)
         mapView.setCenter(pin.coordinate, animated: true)
 
-        imageCache.getImages(lat: (coordinate?.latitude)!, lon: (coordinate?.longitude)!, collectionView: collectionView) { image, data in
-            
-            self.dbImageData.append(data)
-            self.images.append(image)
+        let photoFetchRequest = ImageCache.shared.getPhotoFetchRequest(lat: lat!, lon: lon!)
+        fetchedResultsController = NSFetchedResultsController<Photo>(fetchRequest: photoFetchRequest, managedObjectContext: appDelegate.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        try? fetchedResultsController?.performFetch()
+        
+        if fetchedResultsController?.sections?[0].numberOfObjects == 0 {
+            ImageCache.shared.getImagesFromNetwork(lat: lat!, lon: lon!, locationPin: ImageCache.shared.getPin(lat: lat!, lon: lon!))
         }
     }
     
     
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! Image
-        guard indexPath.row < images.count else {
+        guard let fetchedResultsController = fetchedResultsController,
+            let sections = fetchedResultsController.sections,
+            sections.count > 0,
+            sections[0].numberOfObjects > 0 else {
+                
             cell.imageView.image = #imageLiteral(resourceName: "placeHolder")
             cell.loading.startAnimating()
             cell.loading.isHidden = false
             return cell
         }
-        cell.imageView?.image = images[indexPath.row]
+        let photo = fetchedResultsController.object(at: indexPath)
+        let image = UIImage(data: photo.path! as Data)!
+        cell.imageView?.image = image
         cell.loading.stopAnimating()
         cell.loading.isHidden = true
         return cell
@@ -63,60 +77,73 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
-        let predicate = NSPredicate(format: "path = %@", argumentArray: [dbImageData[indexPath.row]])
+        let predicate = NSPredicate(format: "path = %@", argumentArray: [fetchedResultsController!.object(at: indexPath).path!])
         fetchRequest.predicate = predicate
-//        let deleteFetchRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        
         do {
             let photos = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
             appDelegate.persistentContainer.viewContext.delete(photos.first!)
-            try appDelegate.persistentContainer.viewContext.save()
-            clearAndReloadCollectionFromDB()
+            appDelegate.saveContext()
             print("finish deletion")
         } catch {
             print("couldn't get the photos")
             return
         }
-        
-        
     }
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (images.count == 0) ? 21: images.count
+        guard let sections = fetchedResultsController?.sections,
+            sections.count > 0,
+            sections[section].numberOfObjects > 0 else {
+                return 0
+        }
+        return sections[section].numberOfObjects
     }
 
     
     @IBAction func refresh(_ sender: Any) {
-        let pin = imageCache.getPin(lat: coordinate!.latitude, lon: coordinate!.longitude)
+        let pin = ImageCache.shared.getPin(lat: coordinate!.latitude, lon: coordinate!.longitude)
         updatePageNumberAndClearPhotos(of: pin)
-        clearAndReloadCollectionView()
         print("now pageNumber = \(pin.pageNumber)")
         appDelegate.saveContext()
-        imageCache.getImagesFromNetwork(lat: coordinate!.latitude, lon: coordinate!.longitude, collectionView: collectionView, locationPin: pin) { image, data in
-            
-            self.dbImageData.append(data)
-            self.images.append(image)
-        }
+        ImageCache.shared.getImagesFromNetwork(lat: coordinate!.latitude, lon: coordinate!.longitude, locationPin: pin)
     }
     
     private func updatePageNumberAndClearPhotos(of pin: Pin) {
         pin.pageNumber += 1
         pin.photos = NSSet()
     }
-    private func clearAndReloadCollectionView() {
-        images = []
-        dbImageData = []
-        collectionView.reloadData()
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        insertedIndexPaths = [IndexPath]()
+        deletedIndexPaths = [IndexPath]()
     }
     
-    private func clearAndReloadCollectionFromDB() {
-        clearAndReloadCollectionView()
-        
-        imageCache.getImages(lat: (coordinate?.latitude)!, lon: (coordinate?.longitude)!, collectionView: collectionView) { image, data in
-            
-            self.dbImageData.append(data)
-            self.images.append(image)
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .delete:
+            deletedIndexPaths?.append(indexPath!)
+        case .insert:
+            insertedIndexPaths?.append(newIndexPath!)
+        default:
+            print("shouldn't be here")
         }
     }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        collectionView.performBatchUpdates({
+            if let deletedIndexPaths = self.deletedIndexPaths {
+                for index in deletedIndexPaths {
+                    self.collectionView.deleteItems(at: [index])
+                }
+            }
+            
+            if let insertedIndexPaths = self.insertedIndexPaths {
+                for index in insertedIndexPaths {
+                    self.collectionView.insertItems(at: [index])
+                }
+            }
+        }, completion: nil)
+    }
+
 }
