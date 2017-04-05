@@ -31,8 +31,9 @@ class ImageCache {
                 let data = UIImagePNGRepresentation(image)
                 photo.path = data! as NSData?
                 locationPin.addToPhotos(photo)
+                self.appDelegate.saveContext()
                 if count == 1 {
-                    self.appDelegate.saveContext()
+                    
                 }
             }
         })
@@ -65,7 +66,7 @@ class ImageCache {
         let photoPredicate = NSPredicate(format: "pin = %@", argumentArray: [pin])
         let sortDescriptor = NSSortDescriptor(key: "path", ascending: true)
         photoFetchRequest.predicate = photoPredicate
-        photoFetchRequest.sortDescriptors = [sortDescriptor]
+        photoFetchRequest.sortDescriptors = []
         return photoFetchRequest
     }
     

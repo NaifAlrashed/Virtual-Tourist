@@ -122,28 +122,40 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .delete:
-            deletedIndexPaths?.append(indexPath!)
+            guard let indexPath = indexPath else {
+                print("error: indexPath not found")
+                return
+            }
+            deletedIndexPaths?.append(indexPath)
         case .insert:
-            insertedIndexPaths?.append(newIndexPath!)
+            guard let newIndexPath = newIndexPath else {
+                print("error: newIndexPath not found")
+                return
+            }
+            insertedIndexPaths?.append(newIndexPath)
         default:
             print("shouldn't be here")
         }
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        
         collectionView.performBatchUpdates({
             if let deletedIndexPaths = self.deletedIndexPaths {
                 for index in deletedIndexPaths {
                     self.collectionView.deleteItems(at: [index])
                 }
             }
+            self.deletedIndexPaths = [IndexPath]()
             
             if let insertedIndexPaths = self.insertedIndexPaths {
                 for index in insertedIndexPaths {
                     self.collectionView.insertItems(at: [index])
                 }
             }
+            self.insertedIndexPaths = [IndexPath]()
         }, completion: nil)
+        print("success")
     }
 
 }

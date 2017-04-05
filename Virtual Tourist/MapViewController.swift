@@ -12,6 +12,7 @@ import CoreData
 
 class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
+    @IBOutlet weak var state: UIBarButtonItem!
     @IBOutlet weak var mapView: MKMapView!
     
     let delegate = UIApplication.shared.delegate as! AppDelegate
@@ -25,6 +26,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 mapView.addAnnotation(annotation)
             }
         }
+        
     }
     
     @IBAction func addPin(_ sender: UILongPressGestureRecognizer) {
@@ -58,6 +60,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             mapView.deselectAnnotation(view.annotation, animated: true)
             navigationController?.pushViewController(controller, animated: true)
         }
+    }
+
+    @IBAction func stateButtonClicked(_ sender: Any) {
+        state.style = (state.style == .done) ? .bordered : .done
     }
 
 }

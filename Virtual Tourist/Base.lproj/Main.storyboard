@@ -40,10 +40,15 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2k9-MR-vty">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="if8-oS-5FJ"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="if8-oS-5FJ">
+                            <connections>
+                                <action selector="stateButtonClicked:" destination="BYZ-38-t0r" id="pA4-ET-MAd"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="f3Y-eZ-dNw" id="MYL-KQ-Hp9"/>
+                        <outlet property="state" destination="if8-oS-5FJ" id="uf4-Eg-tLp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
