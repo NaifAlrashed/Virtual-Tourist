@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
     struct Constants {
+        static var numberOfPics: Int? = nil
+        static let numberOfPicsNotificationName = "pics changed"
         
         // MARK: Flickr
         struct Flickr {

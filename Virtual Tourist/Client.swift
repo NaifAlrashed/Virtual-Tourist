@@ -60,6 +60,8 @@ class Client {
                 return
             }
             print(photos.count)
+            Constants.numberOfPics = photos.count
+            NotificationCenter.default.post(name: Notification.Name(rawValue: Constants.numberOfPicsNotificationName), object: Constants.numberOfPics!)
             var count = photos.count
             for somePhoto in photos {
                 guard let photoReference = somePhoto as? [String:Any] else {

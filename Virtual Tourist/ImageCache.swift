@@ -31,40 +31,20 @@ class ImageCache {
                 let data = UIImagePNGRepresentation(image)
                 photo.path = data! as NSData?
                 locationPin.addToPhotos(photo)
-                self.appDelegate.saveContext()
                 if count == 1 {
-                    
+                    self.appDelegate.saveContext()
                 }
             }
         })
     }
     
-//    func getImages (lat: Double, lon: Double, collectionView: UICollectionView) {
-//        
-//        let pin = getPin(lat: lat, lon: lon)
-//        
-//        let photosFetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
-//        let photoPredicate = NSPredicate(format: "pin = %@", argumentArray: [pin])
-//        photosFetchRequest.predicate = photoPredicate
-//        let photos = try? appDelegate.persistentContainer.viewContext.fetch(photosFetchRequest)
-//        print("photos count = \(photos?.count)")
-//        
-//        if (photos?.isEmpty)! {
-//            //get images from webservice
-//            getImagesFromNetwork(lat: lat, lon: lon, collectionView: collectionView, locationPin: pin)
-//        } else {
-//            print("using core data")
-//            for photo in photos! {
-//                let image = UIImage(data: photo.path as! Data)!
-//            }
-//        }
-//    }
+
     func getPhotoFetchRequest(lat: Double, lon: Double) -> NSFetchRequest<Photo> {
 
         let pin = getPin(lat: lat, lon: lon)
         let photoFetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
         let photoPredicate = NSPredicate(format: "pin = %@", argumentArray: [pin])
-        let sortDescriptor = NSSortDescriptor(key: "path", ascending: true)
+        _ = NSSortDescriptor(key: "path", ascending: true)
         photoFetchRequest.predicate = photoPredicate
         photoFetchRequest.sortDescriptors = []
         return photoFetchRequest

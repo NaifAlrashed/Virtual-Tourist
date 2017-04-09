@@ -18,7 +18,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     var lat: Double? = nil
     var lon: Double? = nil
     var locationPin: Pin? = nil
-//    var dbImageData: [NSData] = []
+    var numberOfRowsInSection = 0
+    
     
     var fetchedResultsController: NSFetchedResultsController<Photo>? {
         didSet {
@@ -53,13 +54,32 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(gotNumOfPics), name: Notification.Name(Constants.numberOfPicsNotificationName), object: nil)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(Constants.numberOfPicsNotificationName), object: nil)
+    }
+    func gotNumOfPics() {
+        guard Constants.numberOfPics != nil else {
+            print("pics are nil!!!")
+            return
+        }
+        numberOfRowsInSection = Constants.numberOfPics!
+        collectionView.reloadData()
+    }
+    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! Image
         guard let fetchedResultsController = fetchedResultsController,
             let sections = fetchedResultsController.sections,
             sections.count > 0,
-            sections[0].numberOfObjects > 0 else {
+            sections[0].numberOfObjects > 0, sections[0].numberOfObjects > indexPath.row else {
                 
             cell.imageView.image = #imageLiteral(resourceName: "placeHolder")
             cell.loading.startAnimating()
@@ -76,42 +96,39 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
 
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
-        let predicate = NSPredicate(format: "path = %@", argumentArray: [fetchedResultsController!.object(at: indexPath).path!])
-        fetchRequest.predicate = predicate
-        do {
-            let photos = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
-            appDelegate.persistentContainer.viewContext.delete(photos.first!)
-            appDelegate.saveContext()
-            print("finish deletion")
-        } catch {
-            print("couldn't get the photos")
+        guard let photo = fetchedResultsController?.object(at: indexPath) else {
+            print("couldn't find the photo")
             return
         }
+        numberOfRowsInSection = numberOfRowsInSection - 1
+        appDelegate.persistentContainer.viewContext.delete(photo)
+
     }
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let sections = fetchedResultsController?.sections,
-            sections.count > 0,
-            sections[section].numberOfObjects > 0 else {
-                return 0
+        if numberOfRowsInSection == 0 {
+            return fetchedResultsController?.sections?[0].numberOfObjects ?? 0
         }
-        return sections[section].numberOfObjects
+        return numberOfRowsInSection
     }
 
     
     @IBAction func refresh(_ sender: Any) {
         let pin = ImageCache.shared.getPin(lat: coordinate!.latitude, lon: coordinate!.longitude)
-        updatePageNumberAndClearPhotos(of: pin)
+//        updatePageNumberAndClearPhotos(of: pin)
+        pin.pageNumber = pin.pageNumber + 1
+        pin.photos = NSSet()
+        appDelegate.saveContext()
         print("now pageNumber = \(pin.pageNumber)")
         appDelegate.saveContext()
         ImageCache.shared.getImagesFromNetwork(lat: coordinate!.latitude, lon: coordinate!.longitude, locationPin: pin)
     }
     
     private func updatePageNumberAndClearPhotos(of pin: Pin) {
-        pin.pageNumber += 1
+        pin.pageNumber = pin.pageNumber + 1
         pin.photos = NSSet()
+        appDelegate.saveContext()
     }
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -145,17 +162,21 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                 for index in deletedIndexPaths {
                     self.collectionView.deleteItems(at: [index])
                 }
+                self.deletedIndexPaths = [IndexPath]()
             }
-            self.deletedIndexPaths = [IndexPath]()
             
-            if let insertedIndexPaths = self.insertedIndexPaths {
+            if let insertedIndexPaths = self.insertedIndexPaths, Constants.numberOfPics != nil {
                 for index in insertedIndexPaths {
-                    self.collectionView.insertItems(at: [index])
+                    self.collectionView.reloadItems(at: [index])                    
                 }
+                self.insertedIndexPaths = [IndexPath]()
             }
-            self.insertedIndexPaths = [IndexPath]()
         }, completion: nil)
         print("success")
+    }
+    
+    deinit {
+        Constants.numberOfPics = nil
     }
 
 }
