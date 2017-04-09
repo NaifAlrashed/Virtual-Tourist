@@ -18,10 +18,10 @@ class ImageCache {
     private init() {}
     
     func getImagesFromNetwork (lat: Double, lon: Double, locationPin: Pin) {
-        
+        var isFirst = true
         Constants.FlickrParameterValues.pageNumber = String(locationPin.pageNumber)
         let _ = client.getPhotos(lat: lat, lon: lon, completionHandler: { image, count in
-            if count < 21 {
+            if count < 21 && isFirst {
                 DispatchQueue.main.async {
                     locationPin.pageNumber = 0
                 }
@@ -35,6 +35,7 @@ class ImageCache {
                     self.appDelegate.saveContext()
                 }
             }
+            isFirst = false
         })
     }
     

@@ -100,7 +100,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
             print("couldn't find the photo")
             return
         }
-        numberOfRowsInSection = numberOfRowsInSection - 1
+        numberOfRowsInSection = 0
         appDelegate.persistentContainer.viewContext.delete(photo)
 
     }
@@ -117,6 +117,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     @IBAction func refresh(_ sender: Any) {
         let pin = ImageCache.shared.getPin(lat: coordinate!.latitude, lon: coordinate!.longitude)
 //        updatePageNumberAndClearPhotos(of: pin)
+        print("before change pageNumber = \(pin.pageNumber)")
         pin.pageNumber = pin.pageNumber + 1
         pin.photos = NSSet()
         appDelegate.saveContext()
@@ -126,7 +127,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     private func updatePageNumberAndClearPhotos(of pin: Pin) {
+        print("pageNumber beforeChange: \(pin.pageNumber)")
         pin.pageNumber = pin.pageNumber + 1
+        print("pageNumber afterChange: \(pin.pageNumber)")
         pin.photos = NSSet()
         appDelegate.saveContext()
     }

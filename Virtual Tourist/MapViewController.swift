@@ -12,9 +12,10 @@ import CoreData
 
 class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
-    @IBOutlet weak var state: UIBarButtonItem!
     @IBOutlet weak var mapView: MKMapView!
     
+    var barButtonItem: UIBarButtonItem!
+    var isEdit = false
     let delegate = UIApplication.shared.delegate as! AppDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +27,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 mapView.addAnnotation(annotation)
             }
         }
-        
+        changeToEdit()
+    }
+    
+    func changeToDone() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(changeToEdit))
+        isEdit = false
+    }
+    func changeToEdit() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(changeToDone))
+        isEdit = true
     }
     
     @IBAction func addPin(_ sender: UILongPressGestureRecognizer) {
@@ -36,9 +46,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         }
         let touchLocation = sender.location(in: mapView)
         let locationCoordinate = mapView.convert(touchLocation, toCoordinateFrom: mapView)
-        
-        print("latitude: \(locationCoordinate.latitude), longintude: \(locationCoordinate.longitude)")
-        
+                
         let pin = PinAnnotation(coordinate: locationCoordinate)
         mapView.addAnnotation(pin)
         
@@ -52,18 +60,24 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        mapView.deselectAnnotation(view.annotation, animated: true)
         if (view.annotation is PinAnnotation) {
-            let controller = storyboard?.instantiateViewController(withIdentifier: "Pictures") as! PhotoAlbumViewController
-            controller.lat = view.annotation?.coordinate.latitude
-            controller.lon = view.annotation?.coordinate.longitude
-            controller.coordinate = view.annotation?.coordinate
-            mapView.deselectAnnotation(view.annotation, animated: true)
-            navigationController?.pushViewController(controller, animated: true)
+            if isEdit {
+                let controller = storyboard?.instantiateViewController(withIdentifier: "Pictures") as! PhotoAlbumViewController
+                controller.lat = view.annotation?.coordinate.latitude
+                controller.lon = view.annotation?.coordinate.longitude
+                controller.coordinate = view.annotation?.coordinate
+                navigationController?.pushViewController(controller, animated: true)
+            } else {
+                guard let coordinate = view.annotation?.coordinate else {
+                    print("found nil annotation!")
+                    return
+                }
+                let savedPin = ImageCache.shared.getPin(lat: coordinate.latitude, lon: coordinate.longitude)
+                delegate.persistentContainer.viewContext.delete(savedPin)
+                mapView.removeAnnotation(view.annotation!)
+            }
         }
-    }
-
-    @IBAction func stateButtonClicked(_ sender: Any) {
-        state.style = (state.style == .done) ? .bordered : .done
     }
 
 }

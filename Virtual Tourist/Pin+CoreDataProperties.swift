@@ -2,7 +2,7 @@
 //  Pin+CoreDataProperties.swift
 //  Virtual Tourist
 //
-//  Created by Naif Alrashed on 3/28/17.
+//  Created by Naif Alrashed on 4/9/17.
 //  Copyright © 2017 Naif Alrashed. All rights reserved.
 //
 
@@ -13,7 +13,7 @@ import CoreData
 extension Pin {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Pin> {
-        return NSFetchRequest<Pin>(entityName: "Pin");
+        return NSFetchRequest<Pin>(entityName: "Pin")
     }
 
     @NSManaged public var latitude: Double

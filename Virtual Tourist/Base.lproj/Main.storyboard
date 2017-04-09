@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Deq-xa-lvS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Deq-xa-lvS">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -39,16 +39,9 @@
                             <constraint firstItem="f3Y-eZ-dNw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="n7k-D1-Mr5"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="2k9-MR-vty">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="if8-oS-5FJ">
-                            <connections>
-                                <action selector="stateButtonClicked:" destination="BYZ-38-t0r" id="pA4-ET-MAd"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="2k9-MR-vty"/>
                     <connections>
                         <outlet property="mapView" destination="f3Y-eZ-dNw" id="MYL-KQ-Hp9"/>
-                        <outlet property="state" destination="if8-oS-5FJ" id="uf4-Eg-tLp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
