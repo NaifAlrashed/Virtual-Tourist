@@ -20,25 +20,19 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     var locationPin: Pin? = nil
     var numberOfRowsInSection = 0
     
-    
     var fetchedResultsController: NSFetchedResultsController<Photo>? {
         didSet {
             fetchedResultsController?.delegate = self
         }
     }
     
-    
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var coordinate: CLLocationCoordinate2D? = nil
-    var a = true
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var mapView: MKMapView!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
         let pin = PinAnnotation(coordinate: coordinate!)
         mapView.addAnnotation(pin)
@@ -59,11 +53,13 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         
         NotificationCenter.default.addObserver(self, selector: #selector(gotNumOfPics), name: Notification.Name(Constants.numberOfPicsNotificationName), object: nil)
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         NotificationCenter.default.removeObserver(self, name: Notification.Name(Constants.numberOfPicsNotificationName), object: nil)
     }
+    
     func gotNumOfPics() {
         guard Constants.numberOfPics != nil else {
             print("pics are nil!!!")
@@ -72,7 +68,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         numberOfRowsInSection = Constants.numberOfPics!
         collectionView.reloadData()
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as! Image
@@ -93,7 +88,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         cell.loading.isHidden = true
         return cell
     }
-
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let photo = fetchedResultsController?.object(at: indexPath) else {
@@ -102,9 +96,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         }
         numberOfRowsInSection = 0
         appDelegate.persistentContainer.viewContext.delete(photo)
-
+        appDelegate.saveContext()
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if numberOfRowsInSection == 0 {
@@ -112,26 +105,13 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         }
         return numberOfRowsInSection
     }
-
     
     @IBAction func refresh(_ sender: Any) {
         let pin = ImageCache.shared.getPin(lat: coordinate!.latitude, lon: coordinate!.longitude)
-//        updatePageNumberAndClearPhotos(of: pin)
-        print("before change pageNumber = \(pin.pageNumber)")
         pin.pageNumber = pin.pageNumber + 1
         pin.photos = NSSet()
-        appDelegate.saveContext()
-        print("now pageNumber = \(pin.pageNumber)")
         appDelegate.saveContext()
         ImageCache.shared.getImagesFromNetwork(lat: coordinate!.latitude, lon: coordinate!.longitude, locationPin: pin)
-    }
-    
-    private func updatePageNumberAndClearPhotos(of pin: Pin) {
-        print("pageNumber beforeChange: \(pin.pageNumber)")
-        pin.pageNumber = pin.pageNumber + 1
-        print("pageNumber afterChange: \(pin.pageNumber)")
-        pin.photos = NSSet()
-        appDelegate.saveContext()
     }
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -143,18 +123,16 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
         switch type {
         case .delete:
             guard let indexPath = indexPath else {
-                print("error: indexPath not found")
-                return
+                fatalError("indexPath not found")
             }
             deletedIndexPaths?.append(indexPath)
         case .insert:
             guard let newIndexPath = newIndexPath else {
-                print("error: newIndexPath not found")
-                return
+                fatalError("newIndexPath not found")
             }
             insertedIndexPaths?.append(newIndexPath)
         default:
-            print("shouldn't be here")
+            fatalError("shouldn't be here")
         }
     }
     
@@ -175,11 +153,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
                 self.insertedIndexPaths = [IndexPath]()
             }
         }, completion: nil)
-        print("success")
     }
     
     deinit {
         Constants.numberOfPics = nil
     }
-
 }
