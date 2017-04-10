@@ -109,7 +109,14 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICo
     @IBAction func refresh(_ sender: Any) {
         let pin = ImageCache.shared.getPin(lat: coordinate!.latitude, lon: coordinate!.longitude)
         pin.pageNumber = pin.pageNumber + 1
-        pin.photos = NSSet()
+        let photosRequest = ImageCache.shared.getPhotoFetchRequest(lat: lat!, lon: lon!)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: photosRequest as! NSFetchRequest<NSFetchRequestResult>)
+        do {
+            try appDelegate.persistentContainer.viewContext.execute(deleteRequest)
+            print("batch delete succeeded!")
+        } catch {
+            print("batch delete failed")
+        }
         appDelegate.saveContext()
         ImageCache.shared.getImagesFromNetwork(lat: coordinate!.latitude, lon: coordinate!.longitude, locationPin: pin)
     }

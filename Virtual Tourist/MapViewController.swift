@@ -20,6 +20,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+        print(paths[0])        
         let fr: NSFetchRequest<Pin> = Pin.fetchRequest()
         if let pins = try? delegate.persistentContainer.viewContext.fetch(fr) {
             for pin in pins {
